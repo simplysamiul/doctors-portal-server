@@ -2,6 +2,7 @@ const express =  require("express");
 const app = express();
 const cors = require("cors");
 const { MongoClient } = require('mongodb');
+const objectId = require("mongodb").ObjectId;
 const admin = require("firebase-admin");
 const port = process.env.PORT || 5000;
 require('dotenv').config();
@@ -53,6 +54,13 @@ async function run(){
             const cursor = appoinmentCollection.find(query);
             const result = await cursor.toArray();
             res.send(result);
+        });
+        // Get Appoinment Api 
+        app.get("/appoinments/:id", async(req,res)=>{
+            const id = req.params.id;
+            const query = { _id : objectId(id)};
+            const result = await appoinmentCollection.findOne(query);
+            res.json(result);
         });
 
         // Api Post
